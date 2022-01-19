@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.koddev.chatapp">
+    package="com.encription.chatapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".StartActivity">
+        <activity android:name="com.encription.chatapp.StartActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,18 +22,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RegisterActivity"
-            android:parentActivityName=".StartActivity" />
-        <activity android:name=".MainActivity" />
+            android:name="com.encription.chatapp.RegisterActivity"
+            android:parentActivityName="com.encription.chatapp.StartActivity" />
+        <activity android:name="com.encription.chatapp.MainActivity" />
         <activity
-            android:name=".LoginActivity"
-            android:parentActivityName=".StartActivity" />
-        <activity android:name=".MessageActivity" />
+            android:name="com.encription.chatapp.LoginActivity"
+            android:parentActivityName="com.encription.chatapp.StartActivity" />
+        <activity android:name="com.encription.chatapp.MessageActivity" />
         <activity
-            android:name=".ResetPasswordActivity"
-            android:parentActivityName=".LoginActivity" />
+            android:name="com.encription.chatapp.ResetPasswordActivity"
+            android:parentActivityName="com.encription.chatapp.LoginActivity" />
 
-        <service android:name=".Notifications.MyFirebaseIdService"
+        <service android:name="com.encription.chatapp.Notifications.MyFirebaseIdService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -40,7 +41,7 @@
             </intent-filter>
         </service>
 
-        <service android:name=".Notifications.MyFirebaseMessaging"
+        <service android:name="com.encription.chatapp.Notifications.MyFirebaseMessaging"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
