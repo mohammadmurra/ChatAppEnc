@@ -2,12 +2,15 @@ package com.encription.chatapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -15,6 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.encription.chatapp.Fragments.UsersFragment;
+import com.encription.chatapp.RSAAlgorithm.Rsa_algo;
+import com.google.android.gms.common.util.IOUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,7 +39,10 @@ import com.encription.chatapp.Notifications.MyResponse;
 import com.encription.chatapp.Notifications.Sender;
 import com.encription.chatapp.Notifications.Token;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
@@ -63,20 +72,26 @@ public class MessageActivity extends AppCompatActivity {
     ValueEventListener seenListener;
 
     String userid;
+    BigInteger publickey;
 
     APIService apiService;
-
+User myuser;
     boolean notify = false;
-
+    Rsa_algo rsa;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
+        myuser = UsersFragment.myuser;
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+         rsa=new Rsa_algo();
+        rsa.setDK(new BigInteger(myuser.getPrivateKey()));
+        rsa.setEK(new BigInteger(myuser.getPublicKey()));
+        rsa.setN(new BigInteger(myuser.getnInt()));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,15 +115,32 @@ public class MessageActivity extends AppCompatActivity {
 
         intent = getIntent();
         userid = intent.getStringExtra("userid");
-        fuser = FirebaseAuth.getInstance().getCurrentUser();
+       publickey= new BigInteger(intent.getStringExtra("publickey"));
 
+
+        System.out.println("chat pub key"+publickey);
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
         btn_send.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
                 notify = true;
                 String msg = text_send.getText().toString();
                 if (!msg.equals("")){
-                    sendMessage(fuser.getUid(), userid, msg);
+                    byte[] myencrypted = rsa.encrypt(msg.getBytes());
+//                    rsa.setEK(publickey);
+//
+                    byte[] encrypted = rsa.encrypt(msg.getBytes());
+                    byte[] massgearr = rsa.decrypt(myencrypted);
+//                    Log.d("decryptcheak", + "");
+
+
+//                    byte[] massgearr = rsa.decrypt(myencrypted);
+//                    Log.d("decryptcheak",new String(massgearr));
+//                    Log.d("decryptcheak2",massgearr + "");
+
+                    sendMessage(fuser.getUid(), userid, encrypted+"",myencrypted+"");
+
                 } else {
                     Toast.makeText(MessageActivity.this, "You can't send empty message", Toast.LENGTH_SHORT).show();
                 }
@@ -165,7 +197,7 @@ public class MessageActivity extends AppCompatActivity {
         });
     }
 
-    private void sendMessage(String sender, final String receiver, String message){
+    private void sendMessage(String sender, final String receiver, String message, String myMassage){
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
@@ -173,6 +205,7 @@ public class MessageActivity extends AppCompatActivity {
         hashMap.put("sender", sender);
         hashMap.put("receiver", receiver);
         hashMap.put("message", message);
+        hashMap.put("myMassage",myMassage);
         hashMap.put("isseen", false);
 
         reference.child("Chats").push().setValue(hashMap);
@@ -271,11 +304,22 @@ public class MessageActivity extends AppCompatActivity {
                 mchat.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Chat chat = snapshot.getValue(Chat.class);
-                    if (chat.getReceiver().equals(myid) && chat.getSender().equals(userid) ||
-                            chat.getReceiver().equals(userid) && chat.getSender().equals(myid)){
+                    if (chat.getReceiver().equals(myid) && chat.getSender().equals(userid) ){
+                    Chat msg= decrptMassge(chat);
+                        mchat.add(msg);
+                    } if (  chat.getReceiver().equals(userid) && chat.getSender().equals(myid)){
+
+                        String  massge  = chat.getMessage();
+                        Log.d("decryptcheak", massge.getBytes()+"");
+                        byte[] massgearr = rsa.decrypt(massge.getBytes());
+                       // chat.setMyMassage(massgearr.toString());
+                        chat.setMessage( new String(massgearr));
+                        Log.d("decrb", new String(massgearr));
                         mchat.add(chat);
+
                     }
 
+//
                     messageAdapter = new MessageAdapter(MessageActivity.this, mchat, imageurl);
                     recyclerView.setAdapter(messageAdapter);
                 }
@@ -316,5 +360,54 @@ public class MessageActivity extends AppCompatActivity {
         reference.removeEventListener(seenListener);
         status("offline");
         currentUser("none");
+    }
+//public void test (){
+//    rsa.setDK(new BigInteger(myuser.getPrivateKey()));
+//    rsa.setEK(new BigInteger(myuser.getPublicKey()));
+//    rsa.setN(new BigInteger(myuser.getnInt()));
+//    System.out.println("nnnnnnnnnn test" + rsa.getN());
+//    byte[] encrypted = rsa.encrypt("hahahah".getBytes());
+//    System.out.println("Encrypting String: " + encrypted.toString());
+////        System.out.println("String in Bytes: " + bytesToString(encrypted.toString().getBytes()));
+//    // decrypt
+//    byte[] decrypted = rsa.decrypt(encrypted);
+//    System.out.println("Decrypted String: " + new String(decrypted));
+//
+//
+//
+//}
+    public Chat decrptMyMassge(Chat msg){
+        Chat masge = null;
+
+
+
+        return masge;
+    }
+    public Chat decrptMassge(Chat msg){
+        myuser.getPrivateKey();
+
+
+        String  massge  = msg.getMessage();
+        Log.d("String mmm", massge);
+        Log.d("kyyyyyyyyy", myuser.getPrivateKey());
+
+                       rsa.setDK(new BigInteger(myuser.getPrivateKey()));
+        byte[] decrypted =   rsa.decrypt(massge.getBytes());
+        Log.d("mmmmmmmmmmmm", decrypted + "");
+        Log.d("mmmmmmmmmmmm", decrypted.toString());
+
+        Log.d("mmmmmmmmmmmm", new String(decrypted));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Log.d("mmmmmmmmmmmm",  Base64.getEncoder().encodeToString(decrypted));
+        }
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            String str = new String(decrypted, StandardCharsets.UTF_8);
+
+            Log.d("mmmmmmmmmmmm",  str);
+
+        }
+
+
+        return msg;
     }
 }

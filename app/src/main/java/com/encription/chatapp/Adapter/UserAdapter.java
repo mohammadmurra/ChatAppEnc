@@ -79,8 +79,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                System.out.println("user public you clicked "+user.getPublicKey());
                 Intent intent = new Intent(mContext, MessageActivity.class);
                 intent.putExtra("userid", user.getId());
+                intent.putExtra("publickey",user.getPublicKey());
+
                 mContext.startActivity(intent);
             }
         });

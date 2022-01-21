@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +21,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 public class LoginActivity extends AppCompatActivity {
 
     MaterialEditText email, password;
-    Button btn_login;
+    ImageButton btn_login;
 
     FirebaseAuth auth;
     TextView forgot_password;

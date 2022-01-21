@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/ChatAppNew/app/src/main/res/drawable/background.xml" value="0.1" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/drawable/background_left.xml" value="0.173" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/drawable/background_right.xml" value="0.173" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/drawable/button_background.xml" value="0.173" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/drawable/ic_arrow_forward_black_24dp.xml" value="0.173" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/drawable/ic_lock_outline_black_24dp.xml" value="0.173" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/drawable/ic_mail_outline_black_24dp.xml" value="0.173" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/drawable/layout_background.xml" value="0.1" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/drawable/layout_backgroundfull.xml" value="0.173" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/layout/activity_login.xml" value="0.22826086956521738" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/layout/activity_message.xml" value="0.22826086956521738" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/layout/activity_register.xml" value="0.264" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/layout/activity_reset_password.xml" value="0.22826086956521738" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/layout/activity_start.xml" value="0.22826086956521738" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/layout/bar_layout.xml" value="0.22826086956521738" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/layout/chat_item_left.xml" value="0.22826086956521738" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/layout/chat_item_right.xml" value="0.22826086956521738" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/layout/fragment_chats.xml" value="0.22826086956521738" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/layout/fragment_users.xml" value="0.22826086956521738" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/layout/user_item.xml" value="0.22826086956521738" />
+        <entry key="..\:/ChatAppNew/app/src/main/res/menu/menu.xml" value="0.25416666666666665" />
+      </map>
+    </option>
+  </component>
   <component name="NullableNotNullManager">
     <option name="myDefaultNullable" value="android.support.annotation.Nullable" />
     <option name="myDefaultNotNull" value="android.support.annotation.NonNull" />

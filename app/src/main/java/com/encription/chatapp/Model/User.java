@@ -7,17 +7,23 @@ public class User {
     private String imageURL;
     private String status;
     private String search;
+    private String publicKey;
+    private String nInt;
 
-    public User(String id, String username, String imageURL, String status, String search) {
+    private String privateKey;
+
+    public User(String id, String username, String imageURL, String status, String search, String publicKey, String privateKey , String nInt) {
         this.id = id;
         this.username = username;
         this.imageURL = imageURL;
         this.status = status;
         this.search = search;
+        this.publicKey = publicKey;
+        this.privateKey = privateKey;
+    this.nInt = nInt;
     }
 
     public User() {
-
     }
 
     public String getId() {
@@ -58,5 +64,29 @@ public class User {
 
     public void setSearch(String search) {
         this.search = search;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public String getPrivateKey() {
+        return privateKey;
+    }
+
+    public String getnInt() {
+        return nInt;
+    }
+
+    public void setnInt(String nInt) {
+        this.nInt = nInt;
+    }
+
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
     }
 }

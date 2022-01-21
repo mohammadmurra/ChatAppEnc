@@ -5,31 +5,31 @@
     android:layout_width="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@color/colorPrimary"
+    android:background="#f5f5f5"
     android:layout_height="match_parent"
     tools:context=".StartActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Chat App"
-        android:textColor="#fff"
-        android:textSize="25sp"
-        android:textStyle="bold"/>
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="334dp"
+        android:layout_height="213dp"
+        app:srcCompat="@drawable/welogo" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
+        android:layout_margin="30dp"
         android:id="@+id/login"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/background"
         android:textColor="#fff"
         android:text="login"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/background"
         android:textColor="#fff"
+        android:layout_margin="30dp"
         android:layout_marginTop="10dp"
         android:id="@+id/register"
         android:text="register"/>

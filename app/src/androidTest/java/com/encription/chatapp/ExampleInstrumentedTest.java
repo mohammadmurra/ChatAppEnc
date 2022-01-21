@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.koddev.chatapp", appContext.getPackageName());
+        assertEquals("com.encription.chatapp", appContext.getPackageName());
     }
 }

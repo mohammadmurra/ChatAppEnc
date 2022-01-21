@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:267519986257:android:902085d2440fbac0304670",
+        "mobilesdk_app_id": "1:267519986257:android:115615a9f597014f304670",
         "android_client_info": {
-          "package_name": "com.koddev.chatapp"
+          "package_name": "com.encription.chatapp"
         }
       },
       "oauth_client": [

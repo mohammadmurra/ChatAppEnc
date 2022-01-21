@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,7 @@ public class UsersFragment extends Fragment {
 
     private UserAdapter userAdapter;
     private List<User> mUsers;
-
+public  static  User myuser ;
     EditText search_users;
 
 
@@ -92,6 +93,9 @@ public class UsersFragment extends Fragment {
                     if (!user.getId().equals(fuser.getUid())){
                         mUsers.add(user);
                     }
+                    if (!user.getId().equals(fuser.getUid())){
+                        myuser = user;
+                    }
                 }
 
                 userAdapter = new UserAdapter(getContext(), mUsers, false);
@@ -109,6 +113,7 @@ public class UsersFragment extends Fragment {
     private void readUsers() {
 
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -122,7 +127,9 @@ public class UsersFragment extends Fragment {
                         if (!user.getId().equals(firebaseUser.getUid())) {
                             mUsers.add(user);
                         }
-
+if(user.getId().equals(firebaseUser.getUid())){
+                            myuser = user;
+                        }
                     }
 
                     userAdapter = new UserAdapter(getContext(), mUsers, false);
