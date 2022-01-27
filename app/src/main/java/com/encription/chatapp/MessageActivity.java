@@ -70,7 +70,7 @@ public class MessageActivity extends AppCompatActivity {
     Intent intent;
 
     ValueEventListener seenListener;
-
+    String nInt;
     String userid;
     BigInteger publickey;
 
@@ -91,7 +91,8 @@ User myuser;
          rsa=new Rsa_algo();
         rsa.setDK(new BigInteger(myuser.getPrivateKey()));
         rsa.setEK(new BigInteger(myuser.getPublicKey()));
-        rsa.setN(new BigInteger(myuser.getnInt()));
+
+
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,6 +108,7 @@ User myuser;
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+        rsa.setDK(new BigInteger(myuser.getPrivateKey()));
 
         profile_image = findViewById(R.id.profile_image);
         username = findViewById(R.id.username);
@@ -115,8 +117,9 @@ User myuser;
 
         intent = getIntent();
         userid = intent.getStringExtra("userid");
+        nInt = intent.getStringExtra("nInt");
        publickey= new BigInteger(intent.getStringExtra("publickey"));
-
+//        rsa.setN(new BigInteger(nInt));
 
         System.out.println("chat pub key"+publickey);
         fuser = FirebaseAuth.getInstance().getCurrentUser();
@@ -127,19 +130,22 @@ User myuser;
                 notify = true;
                 String msg = text_send.getText().toString();
                 if (!msg.equals("")){
+                    rsa.setN(new BigInteger(myuser.getnInt()));
+                    rsa.setEK(new BigInteger(myuser.getPublicKey()));
+                 //   rsa.setN(new BigInteger(myuser.getnInt()));
                     byte[] myencrypted = rsa.encrypt(msg.getBytes());
-//                    rsa.setEK(publickey);
-//
+
+
+                    BigInteger myencrb = new BigInteger(myencrypted);
+                    String Mymassge =   myencrb+"";
+                    rsa.setEK(publickey);
+                    rsa.setN(new BigInteger(nInt));
+
                     byte[] encrypted = rsa.encrypt(msg.getBytes());
-                    byte[] massgearr = rsa.decrypt(myencrypted);
-//                    Log.d("decryptcheak", + "");
 
-
-//                    byte[] massgearr = rsa.decrypt(myencrypted);
-//                    Log.d("decryptcheak",new String(massgearr));
-//                    Log.d("decryptcheak2",massgearr + "");
-
-                    sendMessage(fuser.getUid(), userid, encrypted+"",myencrypted+"");
+                    BigInteger encr = new BigInteger(encrypted);
+                    String massge = encr+"";
+                    sendMessage(fuser.getUid(), userid, massge,Mymassge);
 
                 } else {
                     Toast.makeText(MessageActivity.this, "You can't send empty message", Toast.LENGTH_SHORT).show();
@@ -305,16 +311,30 @@ User myuser;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Chat chat = snapshot.getValue(Chat.class);
                     if (chat.getReceiver().equals(myid) && chat.getSender().equals(userid) ){
-                    Chat msg= decrptMassge(chat);
-                        mchat.add(msg);
-                    } if (  chat.getReceiver().equals(userid) && chat.getSender().equals(myid)){
+                        rsa.setN(new BigInteger(myuser.getnInt()));
+                  String masge = chat.getMessage();
 
-                        String  massge  = chat.getMessage();
-                        Log.d("decryptcheak", massge.getBytes()+"");
-                        byte[] massgearr = rsa.decrypt(massge.getBytes());
-                       // chat.setMyMassage(massgearr.toString());
+                        BigInteger w = new BigInteger(masge);
+                        byte[] encrpted = w.toByteArray() ;
+
+
+                        byte[] massgearr = rsa.decrypt(encrpted);
+
                         chat.setMessage( new String(massgearr));
-                        Log.d("decrb", new String(massgearr));
+                        mchat.add(chat);
+                    } if (  chat.getReceiver().equals(userid) && chat.getSender().equals(myid)){
+                        rsa.setN(new BigInteger(myuser.getnInt()));
+
+                        String  mymasse  = chat.getMyMassage();
+
+
+                        BigInteger we = new BigInteger(mymasse);
+                        byte[] encrpte = we.toByteArray() ;
+
+
+                        byte[] massgear = rsa.decrypt(encrpte);
+                        chat.setMessage( new String(massgear));
+                        Log.d("decrb", new String(massgear));
                         mchat.add(chat);
 
                     }
@@ -376,38 +396,6 @@ User myuser;
 //
 //
 //}
-    public Chat decrptMyMassge(Chat msg){
-        Chat masge = null;
 
 
-
-        return masge;
-    }
-    public Chat decrptMassge(Chat msg){
-        myuser.getPrivateKey();
-
-
-        String  massge  = msg.getMessage();
-        Log.d("String mmm", massge);
-        Log.d("kyyyyyyyyy", myuser.getPrivateKey());
-
-                       rsa.setDK(new BigInteger(myuser.getPrivateKey()));
-        byte[] decrypted =   rsa.decrypt(massge.getBytes());
-        Log.d("mmmmmmmmmmmm", decrypted + "");
-        Log.d("mmmmmmmmmmmm", decrypted.toString());
-
-        Log.d("mmmmmmmmmmmm", new String(decrypted));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Log.d("mmmmmmmmmmmm",  Base64.getEncoder().encodeToString(decrypted));
-        }
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            String str = new String(decrypted, StandardCharsets.UTF_8);
-
-            Log.d("mmmmmmmmmmmm",  str);
-
-        }
-
-
-        return msg;
-    }
 }

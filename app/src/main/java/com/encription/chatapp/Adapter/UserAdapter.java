@@ -84,6 +84,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 Intent intent = new Intent(mContext, MessageActivity.class);
                 intent.putExtra("userid", user.getId());
                 intent.putExtra("publickey",user.getPublicKey());
+                intent.putExtra("nInt",user.getnInt());
 
                 mContext.startActivity(intent);
             }
